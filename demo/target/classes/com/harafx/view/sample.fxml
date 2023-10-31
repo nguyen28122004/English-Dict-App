@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.effect.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" pickOnBounds="false" prefHeight="669.0" prefWidth="1127.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.harafx.controllers.vocaController">
+   <top>
+      <MenuBar prefHeight="21.0" prefWidth="677.0" BorderPane.alignment="CENTER">
+        <menus>
+          <Menu mnemonicParsing="false" text="File">
+            <items>
+              <MenuItem mnemonicParsing="false" text="Close" />
+            </items>
+          </Menu>
+          <Menu mnemonicParsing="false" text="Edit">
+            <items>
+              <MenuItem mnemonicParsing="false" text="Delete" />
+              <MenuItem mnemonicParsing="false" text="About" />
+            </items>
+          </Menu>
+          <Menu mnemonicParsing="false" text="Help" />
+        </menus>
+      </MenuBar>
+   </top>
+   <left>
+      <VBox alignment="TOP_CENTER" prefHeight="639.0" prefWidth="139.0" BorderPane.alignment="CENTER">
+         <children>
+            <Button mnemonicParsing="false" onAction="#add" text="Add" />
+            <Button mnemonicParsing="false" text="Edit" />
+            <Button mnemonicParsing="false" text="Delete" />
+         </children></VBox>
+   </left>
+   <center>
+      <SplitPane orientation="VERTICAL" prefHeight="200.0" prefWidth="160.0" BorderPane.alignment="CENTER">
+        <items>
+            <TabPane prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE">
+              <tabs>
+                <Tab closable="false" text="Search">
+                     <content>
+                        <SplitPane dividerPositions="0.3960975609756098" prefHeight="160.0" prefWidth="200.0">
+                          <items>
+                            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="601.0" prefWidth="416.0">
+                                 <children>
+                                    <ListView fx:id="wordsListView" layoutX="14.0" layoutY="41.0" prefHeight="537.0" prefWidth="369.0" />
+                                    <TextField fx:id="searchField" layoutX="14.0" layoutY="6.0" onKeyPressed="#search" onKeyReleased="#search" prefHeight="30.0" prefWidth="368.0" promptText="Type here for searching" />
+                                 </children>
+                              </AnchorPane>
+                            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="601.0" prefWidth="572.0">
+                                 <children>
+                                    <Label fx:id="wordArea" layoutX="25.0" layoutY="12.0" prefHeight="49.0" prefWidth="366.0">
+                                       <font>
+                                          <Font size="37.0" />
+                                       </font>
+                                    </Label>
+                                    <Label fx:id="ipaArea" layoutX="26.0" layoutY="75.0" prefHeight="20.0" prefWidth="286.0" style="-fx-wrap-text: break-word;" />
+                                    <ScrollPane hbarPolicy="NEVER" layoutX="25.0" layoutY="116.0" pannable="true" prefHeight="461.0" prefWidth="463.0" style="-fx-border-width: 0; -fx-background-color: transparent;" vbarPolicy="NEVER" vmax="3.0">
+                                       <content>
+                                          <VBox fx:id="explanationBox" prefHeight="445.0" prefWidth="380.0" />
+                                       </content>
+                                    </ScrollPane>
+                                 </children>
+                              </AnchorPane>
+                          </items>
+                        </SplitPane>
+                     </content>
+                  </Tab>
+                <Tab closable="false" text="Vocabulary Quiz">
+                     <content>
+                        <HBox prefHeight="100.0" prefWidth="200.0">
+                           <children>
+                              <TextArea prefHeight="601.0" prefWidth="476.0" text="Question" />
+                              <GridPane prefHeight="601.0" prefWidth="506.0">
+                                <columnConstraints>
+                                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                </columnConstraints>
+                                <rowConstraints>
+                                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                </rowConstraints>
+                                 <children>
+                                    <TextArea prefHeight="200.0" prefWidth="200.0" text="A" />
+                                    <TextArea prefHeight="200.0" prefWidth="200.0" text="B" GridPane.columnIndex="1" />
+                                    <TextArea prefHeight="200.0" prefWidth="200.0" text="C" GridPane.rowIndex="1" />
+                                    <TextArea prefHeight="200.0" prefWidth="200.0" text="D" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                                 </children>
+                              </GridPane>
+                           </children>
+                        </HBox>
+                     </content>
+                  </Tab>
+              </tabs>
+            </TabPane>
+        </items>
+      </SplitPane>
+   </center>
+</BorderPane>
