@@ -202,6 +202,15 @@ public class vocaController implements Initializable {
 
     // Editing function
     public void edit(ActionEvent event) throws IOException {
+        if (wordsListView.getSelectionModel().getSelectedItem() == null
+                || wordsListView.getSelectionModel().getSelectedItem() == ""
+                || wordsListView.getSelectionModel().getSelectedItem().isEmpty()) {
+            Alert alert = new Alert(AlertType.INFORMATION, "", ButtonType.OK);
+            alert.setHeaderText("You have to choose a word from the list beside before editing");
+
+            alert.showAndWait();
+            return;
+        }
         // passing dict
         Data.passed_dict = dict;
         // Create Stage
