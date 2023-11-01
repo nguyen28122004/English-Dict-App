@@ -13,23 +13,6 @@ public class Word {
     private String ipa;
     private ArrayList<Explanation> explanations = new ArrayList<Explanation>();
 
-    public Word() {
-    }
-
-    public Word(Word word2) {
-        word = word2.word;
-        typeOfWord = word2.typeOfWord;
-        ipa = word2.ipa;
-    }
-
-    public Word(JSONObject jo) {
-        // Asign value to word
-        word = (String) jo.get("word");
-        ipa = (String) jo.get("ipa");
-        typeOfWord = (String) jo.get("type_of_word");
-        this.setExplanations((JSONArray) jo.get("explanations"));
-    }
-
     public String getWord() {
         return word;
     }
@@ -61,7 +44,7 @@ public class Word {
         return explanations;
     }
 
-    public void setExplanations(JSONArray explanations) {
+    public void setExplanations(JSONArray explanations, String t) {
         for (Object tmp : explanations) {
             JSONObject jo = (JSONObject) tmp;
             Explanation explanation = new Explanation();
@@ -78,6 +61,24 @@ public class Word {
         for (Explanation explanation : explanations2) {
             this.explanations.add(explanation);
         }
+    }
+
+    // constructors
+    public Word() {
+    }
+
+    public Word(Word word2) {
+        word = word2.word;
+        typeOfWord = word2.typeOfWord;
+        ipa = word2.ipa;
+    }
+
+    public Word(JSONObject jo) {
+        // Asign value to word
+        word = (String) jo.get("word");
+        ipa = (String) jo.get("ipa");
+        typeOfWord = (String) jo.get("type_of_word");
+        this.setExplanations((JSONArray) jo.get("explanations"), "");
     }
 
     // DEBUG FUNC
