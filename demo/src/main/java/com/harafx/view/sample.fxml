@@ -29,8 +29,8 @@
       <VBox alignment="TOP_CENTER" prefHeight="639.0" prefWidth="139.0" BorderPane.alignment="CENTER">
          <children>
             <Button mnemonicParsing="false" onAction="#add" text="Add" />
-            <Button mnemonicParsing="false" text="Edit" />
-            <Button mnemonicParsing="false" text="Delete" />
+            <Button mnemonicParsing="false" onAction="#edit" text="Edit" />
+            <Button mnemonicParsing="false" onAction="#delete" text="Delete" />
          </children></VBox>
    </left>
    <center>

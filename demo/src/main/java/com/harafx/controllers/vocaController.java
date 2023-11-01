@@ -1,6 +1,8 @@
 package com.harafx.controllers;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
@@ -9,6 +11,7 @@ import org.json.simple.parser.ParseException;
 
 import com.harafx.models.Dictionary;
 import com.harafx.models.Explanation;
+import com.harafx.models.Word;
 
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -21,10 +24,14 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.Separator;
 import javafx.scene.control.TextField;
+import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.ButtonBar.ButtonData;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
@@ -68,10 +75,27 @@ public class vocaController implements Initializable {
 
             @Override
             public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+                if (newValue == "" || newValue == null || newValue.isEmpty()) {
+                    wordArea.setText("");
+                    ipaArea.setText("");
+                    explanationBox.getChildren().clear();
+                    return;
+                }
                 int curSelectedIndex = wordsListView.getSelectionModel().getSelectedIndex();
+                // Search index of word
+                for (int i = 0; i < wordList.size(); i++) {
+                    if (wordList.get(i) == newValue) {
+                        curSelectedIndex = i;
+                    }
+                }
 
                 wordArea.setText(dict.getAllWord(curSelectedIndex).getWord());
-                ipaArea.setText(dict.getAllWord(curSelectedIndex).getIpa());
+                if (dict.getAllWord(curSelectedIndex).getIpa() == ""
+                        || dict.getAllWord(curSelectedIndex).getIpa() == null
+                        || dict.getAllWord(curSelectedIndex).getIpa().isEmpty()) {
+                    ipaArea.setText("");
+                } else
+                    ipaArea.setText("/" + dict.getAllWord(curSelectedIndex).getIpa() + "/");
 
                 // Remove all old children
                 explanationBox.getChildren().clear();
@@ -101,6 +125,11 @@ public class vocaController implements Initializable {
                     explanationBox.getChildren().addAll(vietnameseExLabel, englishExLabel, exampleLabel);
                     explanationBox.getChildren().add(separator);
                     explanationBox.setSpacing(3);
+
+                    // Prepare for passing to Edit Stage
+                    Data.passed_word = new Word(dict.getAllWord(curSelectedIndex));
+                    Data.passed_word.setExplanations(explanations);
+                    Data.index = curSelectedIndex;
                 }
 
                 // Style
@@ -115,7 +144,6 @@ public class vocaController implements Initializable {
         try {
             dict.loadJson(path);
         } catch (IOException | ParseException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
     }
@@ -125,9 +153,23 @@ public class vocaController implements Initializable {
         try {
             dict.exportJson(path);
         } catch (IOException | ParseException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
+    }
+
+    // Update new word
+    private void updateNewWord() {
+        dict = new Dictionary();
+        loadDictFromJson("dict.json");
+        // filteredWordList.clear();
+        wordList.clear();
+        for (int i = 0; i < dict.getSize(); i++) {
+            wordList.add(dict.getAllWord(i).getWord());
+        }
+
+        filteredWordList = new FilteredList<String>(wordList);
+        wordsListView.getItems().clear();
+        wordsListView.getItems().addAll(wordList);
     }
 
     // Searching function
@@ -152,7 +194,43 @@ public class vocaController implements Initializable {
         addWordStage.setTitle("English Vocabulary Apps - Add Word");
         addWordStage.setScene(new Scene(root));
         addWordStage.setResizable(false);
-        addWordStage.show();
+        addWordStage.showAndWait();
 
+        // Update new word
+        updateNewWord();
+    }
+
+    // Editing function
+    public void edit(ActionEvent event) throws IOException {
+        // passing dict
+        Data.passed_dict = dict;
+        // Create Stage
+        Stage addEditStage = new Stage();
+        Parent root = FXMLLoader.load(getClass()
+                .getResource("../view/edit_word.fxml"));
+        addEditStage.setTitle("English Vocabulary Apps - Edit Word");
+        addEditStage.setScene(new Scene(root));
+        addEditStage.setResizable(false);
+        addEditStage.setUserData(dict);
+        addEditStage.showAndWait();
+        // Update new word
+        updateNewWord();
+    }
+
+    // Deleting function
+    public void delete(ActionEvent event)
+            throws UnsupportedEncodingException, FileNotFoundException, IOException, ParseException {
+        String curSelection = wordsListView.getSelectionModel().getSelectedItem();
+        wordsListView.getSelectionModel().clearSelection();
+        Alert alert = new Alert(AlertType.CONFIRMATION, "Click Ok Button for deleting", ButtonType.YES,
+                ButtonType.CANCEL);
+        alert.setHeaderText("Do you want to delete the word \"" + curSelection + "\"?");
+        alert.showAndWait();
+
+        if (alert.getResult().getButtonData() == ButtonData.YES) {
+            dict.removeWord(curSelection);
+            dict.exportJson("dict.json");
+            updateNewWord();
+        }
     }
 }

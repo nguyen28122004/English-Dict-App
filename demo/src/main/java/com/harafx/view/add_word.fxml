@@ -7,19 +7,19 @@
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="277.0" prefWidth="460.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.harafx.controllers.addWordController">
    <children>
       <Button layoutX="303.0" layoutY="233.0" mnemonicParsing="false" onAction="#addWord" prefHeight="26.0" prefWidth="62.0" text="Done" />
-      <Button layoutX="382.0" layoutY="233.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="62.0" text="Cancel" />
+      <Button layoutX="382.0" layoutY="233.0" mnemonicParsing="false" onAction="#closeStage" prefHeight="26.0" prefWidth="62.0" text="Cancel" />
       <TextField fx:id="word" layoutX="20.0" layoutY="36.0" prefHeight="30.0" prefWidth="201.0" promptText="e.g: hello" />
       <Label layoutX="20.0" layoutY="14.0" prefHeight="20.0" prefWidth="48.0" text="Word" />
       <Label layoutX="20.0" layoutY="78.0" prefHeight="20.0" prefWidth="106.0" text="Pronunciation" />
       <TextField fx:id="ipa" layoutX="20.0" layoutY="100.0" prefHeight="30.0" prefWidth="201.0" promptText="e.g: ӕbsəluːt" />
       <Label layoutX="20.0" layoutY="141.0" prefHeight="20.0" prefWidth="106.0" text="Type of word" />
       <ChoiceBox fx:id="typeOfWord" layoutX="20.0" layoutY="167.0" prefHeight="30.0" prefWidth="201.0" />
-      <TextField fx:id="vietnameseExplanation" layoutX="243.0" layoutY="36.0" prefHeight="30.0" prefWidth="201.0" promptText="xin chào" />
+      <TextField fx:id="vietnameseExplanation" layoutX="243.0" layoutY="36.0" onKeyReleased="#changeExplanation" prefHeight="30.0" prefWidth="201.0" promptText="xin chào" />
       <Label layoutX="243.0" layoutY="14.0" prefHeight="20.0" prefWidth="163.0" text="Vietnames explanation" />
-      <TextField fx:id="englishExplanation" layoutX="243.0" layoutY="100.0" prefHeight="30.0" prefWidth="201.0" promptText="hi" />
+      <TextField fx:id="englishExplanation" layoutX="243.0" layoutY="100.0" onKeyReleased="#changeExplanation" prefHeight="30.0" prefWidth="201.0" promptText="hi" />
       <Label layoutX="243.0" layoutY="78.0" prefHeight="20.0" prefWidth="163.0" text="English explanation" />
       <Label layoutX="243.0" layoutY="146.0" prefHeight="20.0" prefWidth="163.0" text="Example" />
-      <TextField fx:id="example" layoutX="243.0" layoutY="168.0" prefHeight="30.0" prefWidth="201.0" promptText="Hello, my name is..." />
+      <TextField fx:id="example" layoutX="243.0" layoutY="168.0" onKeyReleased="#changeExplanation" prefHeight="30.0" prefWidth="201.0" promptText="Hello, my name is..." />
       <Button layoutX="137.0" layoutY="233.0" mnemonicParsing="false" onAction="#addExplanation" prefHeight="30.0" prefWidth="82.0" text="Add more" />
       <ChoiceBox fx:id="explMenu" layoutX="20.0" layoutY="233.0" prefHeight="30.0" prefWidth="112.0" />
       <Label layoutX="20.0" layoutY="207.0" prefHeight="20.0" prefWidth="106.0" text="Explanations" />

@@ -25,9 +25,10 @@ import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonBar.ButtonData;
+import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 
-public class addWordController implements Initializable {
+public class editWordController implements Initializable {
 
     Dictionary dict = new Dictionary();
     Word wordAllProps = new Word();
@@ -52,18 +53,24 @@ public class addWordController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        loadDictFromJson("dict.json");
-        addTypeOfWord();
-        explMenu.getItems().add(1);
-        explMenu.setValue(1);
+        // Get passed data
+        dict = Data.passed_dict;
+        wordAllProps = Data.passed_word;
 
+        setTypeOfWord();
+        setExplanations();
+        setWord();
+        setIpa();
         explMenu.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Integer>() {
 
             @Override
-            public void changed(ObservableValue<? extends Integer> arg0, Integer arg1, Integer arg2) {
+            public void changed(ObservableValue<? extends Integer> arg0, Integer arg1,
+                    Integer arg2) {
                 if (arg2 != explanations.size() + 1) {
-                    vietnameseExplanation.setText(explanations.get(arg2 - 1).getVietnameseExplanation());
-                    englishExplanation.setText(explanations.get(arg2 - 1).getEnglishExplanation());
+                    vietnameseExplanation.setText(explanations.get(arg2 -
+                            1).getVietnameseExplanation());
+                    englishExplanation.setText(explanations.get(arg2 -
+                            1).getEnglishExplanation());
                     example.setText(explanations.get(arg2 - 1).getExample());
                 } else {
                     vietnameseExplanation.setText("");
@@ -75,21 +82,47 @@ public class addWordController implements Initializable {
         });
     }
 
-    // Add type of word
-    private void addTypeOfWord() {
-        String[] typeList = { "adjectives", "adverbs", "conjunctions", "determiners", "nouns", "prepositions",
-                "pronouns", "verbs" };
+    // Set current value
+    private void setTypeOfWord() {
+        String[] typeList = { "adjective", "adverb", "conjunction", "determiner", "noun", "preposition",
+                "pronoun", "verb", "indefinite article" };
         typeOfWord.getItems().addAll(typeList);
+
+        if (wordAllProps.getTypeOfWord() == null || wordAllProps.getTypeOfWord().length() == 0
+                || wordAllProps.getTypeOfWord() == "") {
+            return;
+        } else {
+            typeOfWord.getSelectionModel().select(wordAllProps.getTypeOfWord());
+        }
     }
 
-    // Load from file
-    public void loadDictFromJson(String path) {
-        // Get data from dict.json
-        try {
-            dict.loadJson(path);
-        } catch (IOException | ParseException e) {
-            e.printStackTrace();
+    private void setExplanations() {
+        explanations = wordAllProps.getExplanations();
+        if (explanations.size() == 0) {
+            explMenu.getItems().add(1);
+            explMenu.getSelectionModel().select(0);
+            return;
         }
+
+        for (int i = 0; i < explanations.size(); i++) {
+            explMenu.getItems().add(i + 1);
+        }
+        explMenu.getSelectionModel().select(0);
+        vietnameseExplanation.setText(explanations.get(0).getVietnameseExplanation());
+        englishExplanation.setText(explanations.get(0).getEnglishExplanation());
+        example.setText(explanations.get(0).getExample());
+
+    }
+
+    private void setWord() {
+        word.setText(wordAllProps.getWord());
+    }
+
+    private void setIpa() {
+        if (wordAllProps.getIpa() == "" || wordAllProps.getIpa() == null || wordAllProps.getIpa().isEmpty()) {
+            return;
+        }
+        ipa.setText(wordAllProps.getIpa());
     }
 
     // Export to file
@@ -130,29 +163,16 @@ public class addWordController implements Initializable {
         }
     }
 
-    // Add word
-    public void addWord(ActionEvent event)
+    // Edit word
+    public void editWord(ActionEvent event)
             throws UnsupportedEncodingException, FileNotFoundException, IOException, ParseException {
-        // Check if no word filled
-        if (word.getText().length() == 0) {
-            Alert alert = new Alert(AlertType.INFORMATION, "Please comeback and fill all the property", ButtonType.OK);
-            alert.showAndWait();
-            return;
-        }
-
         // Confirmation
-        Alert alert = new Alert(AlertType.CONFIRMATION, "Click Yes button for confirmation.", ButtonType.YES,
+        Alert alert = new Alert(AlertType.CONFIRMATION, "Click Yes for confirmation", ButtonType.YES,
                 ButtonType.CANCEL);
-        alert.setHeaderText("You want to add the word \"" + word.getText() + "\" to the dictionary?");
-        alert.setTitle("Add word");
+        alert.setHeaderText("Do you want to apply this edit to the word \"" + word.getText() + "\"?");
         alert.showAndWait();
 
-        if (alert.getResult().getButtonData() != ButtonData.YES) {
-            return;
-        }
-        // set value for all
         if (alert.getResult() == ButtonType.YES) {
-            wordAllProps.setWord(word.getText());
             wordAllProps.setIpa(ipa.getText());
             wordAllProps.setTypeOfWord(typeOfWord.getSelectionModel().getSelectedItem());
             wordAllProps.setExplanations(new ArrayList<Explanation>(explanations));
@@ -161,12 +181,11 @@ public class addWordController implements Initializable {
             dict.exportJson("dict.json");
             Stage stage = (Stage) word.getScene().getWindow();
             stage.close();
+            alert.setAlertType(AlertType.INFORMATION);
+            alert.setHeaderText("Your change is applied!\nReload the application for update your new word.");
+            alert.setContentText("Click OK to continue");
+            alert.showAndWait();
         }
-        closeStage(event);
-        alert.setAlertType(AlertType.INFORMATION);
-        alert.setHeaderText("Your word is added!\nReload the application for update your new word.");
-        alert.setContentText("Click OK to continue");
-        alert.showAndWait();
     }
 
     // Cancel

@@ -11,8 +11,6 @@ import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-import java.util.Map;
-
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -62,19 +60,32 @@ public class Dictionary {
         JSONObject explJObject = new JSONObject();
 
         for (Explanation explanation : word.getExplanations()) {
-            explJObject.put("vietnamese_explanation", explanation.getVietnameseExplanation());
-            explJObject.put("english_explanation", explanation.getEnglishExplanation());
-            explJObject.put("example", explanation.getExample());
+            explJObject.put("vietnamese_explanation", new String(explanation.getVietnameseExplanation()));
+            explJObject.put("english_explanation", new String(explanation.getEnglishExplanation()));
+            explJObject.put("example", new String(explanation.getExample()));
 
-            explJArray.add(explJObject);
+            explJArray.add(new JSONObject(explJObject));
         }
 
-        jo.put("explanation", explJArray);
-        System.out.println(dictJa.size());
+        jo.put("explanations", explJArray);
         dictJa.add(jo);
-
-        System.out.println(dictJa.size());
         // dictJa.add((JSONObject) word);
+    }
+
+    // remove word from dict
+    public void removeWord(String target) {
+        for (int i = 0; i < words.size(); i++) {
+            if (target.equals(words.get(i).getWord())) {
+                words.remove(i);
+            }
+        }
+
+        for (int i = 0; i < dictJa.size(); i++) {
+            JSONObject jo = (JSONObject) dictJa.get(i);
+            if (target.equals((String) jo.get("word"))) {
+                dictJa.remove(i);
+            }
+        }
     }
 
     public void loadJson(String path) throws FileNotFoundException, IOException, ParseException {
@@ -94,6 +105,7 @@ public class Dictionary {
             Word word = new Word(jo);
             this.words.add(word);
         }
+        System.out.println("Successfully load data from " + path);
     }
 
     public void exportJson(String path)

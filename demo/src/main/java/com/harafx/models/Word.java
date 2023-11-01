@@ -5,8 +5,6 @@ import java.util.ArrayList;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
-import com.harafx.controllers.vocaController;
-
 public class Word {
     private String word;
     private String typeOfWord;
@@ -30,8 +28,8 @@ public class Word {
     }
 
     public String getIpa() {
-        if (ipa.length() > 0) {
-            return "/" + ipa + "/";
+        if (ipa == "" || ipa == null || ipa.length() == 0) {
+            return ipa;
         }
         return ipa;
     }
@@ -58,9 +56,9 @@ public class Word {
     }
 
     public void setExplanations(ArrayList<Explanation> explanations2) {
-        for (Explanation explanation : explanations2) {
-            this.explanations.add(explanation);
-        }
+        System.out.println();
+        explanations.clear();
+        explanations.addAll(explanations2);
     }
 
     // constructors
